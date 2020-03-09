@@ -22,7 +22,7 @@ class ButtonSpace(val context: Context) : View.OnClickListener {
 
     private val activity = context as Activity
     private val pref = GetAndStoreData(context)
-    private val animationInAction = AnimationInAction(context)
+    private val animationInAction = AnimationInAction1(context)
     private val arrangeScreen = ArrangeScreen(context)
     val helper = Helper(context)
 

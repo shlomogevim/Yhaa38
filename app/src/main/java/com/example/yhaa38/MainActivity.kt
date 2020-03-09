@@ -6,7 +6,7 @@ import kotlinx.android.synthetic.main.helper_view_layout.*
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var animationInAction: AnimationInAction
+    lateinit var animationInAction: AnimationInAction1
     lateinit var pref: GetAndStoreData
     lateinit var arrangeScreen: ArrangeScreen
     lateinit var buttonSpace: ButtonSpace
@@ -21,11 +21,11 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun enterData() {
-        pref = GetAndStoreData(this)
-
         var talkList = pref.getTalkingList(0) //***********
-        pref.saveCurrentPage(47)
+       pref.saveCurrentPage(78)
 
+        pref.saveFonts(1)
+       // pref.saveFonts(10)
         var showPosition = true
         pref.saveShowPosition(showPosition)
 
@@ -37,10 +37,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initAll() {
+        pref = GetAndStoreData(this)
+            //var talkList = pref.getTalkingList(0) //***********
 
         arrangeScreen = ArrangeScreen(this)
         buttonSpace = ButtonSpace(this)
-        animationInAction = AnimationInAction(this)
+        animationInAction = AnimationInAction1(this)
         buttonSpace.initButton()
         arrangeScreen.setLayoutShowMode()
         arrangeScreen.operateListView()

@@ -9,7 +9,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.yhaa38.Const.Companion.ASSEETS_FILE
 import com.example.yhaa38.Const.Companion.CURRENT_PAGE
-import com.example.yhaa38.Const.Companion.FILE_NUM
 import com.example.yhaa38.Const.Companion.FONTS
 import com.example.yhaa38.Const.Companion.INTERVAL
 import com.example.yhaa38.Const.Companion.LASTTALKER
@@ -51,7 +50,7 @@ class GetAndStoreData(val context: Context) : AppCompatActivity() {
     fun getCurrentPage(): Int = myPref.getInt(CURRENT_PAGE, 1)
     fun getLastPage(): Int = myPref.getInt(LAST_PAGE, 1)
     fun getInterval(): Int = myPref.getInt(INTERVAL, 0)
-    fun getCurrentFile(): Int = myPref.getInt(FILE_NUM, 1)
+   // fun getCurrentFile(): Int = myPref.getInt(FILE_NUM, 1)
     fun getShowPosition(): Boolean = myPref.getBoolean(SHOWPOSITION, true)
     fun getFonts(): Int = myPref.getInt(FONTS, 1)
 
@@ -69,7 +68,7 @@ class GetAndStoreData(val context: Context) : AppCompatActivity() {
 
     fun saveTalkingList(talkingList: ArrayList<Talker>) {
         val gson = Gson()
-        val tagNum = getCurrentFile()
+       // val tagNum = getCurrentFile()
         val jsonString = gson.toJson(talkingList)
         // myPref.edit().putString(TALKLIST+tagNum.toString(), jsonString).apply()
         myPref.edit().putString(TALKLIST, jsonString).apply()
@@ -92,8 +91,7 @@ class GetAndStoreData(val context: Context) : AppCompatActivity() {
         return talker
     }
 
-    fun
-            getTalkingList(ind: Int): ArrayList<Talker> {
+    fun getTalkingList(ind: Int): ArrayList<Talker> {
         val talkList: ArrayList<Talker>
         val gson = Gson()
         val jsonString = myPref.getString(TALKLIST, null)
@@ -125,7 +123,8 @@ class GetAndStoreData(val context: Context) : AppCompatActivity() {
         var talkList1 = arrayListOf<Talker>()
         val ADAM = "-אדם-"
         val GOD = "-אלוהים-"
-        val currenteFile = "text/text" + ASSEETS_FILE + ".txt"
+        //val currenteFile = "text/text" + ASSEETS_FILE + ".txt"
+        val currenteFile = "pretext/" + ASSEETS_FILE + ".txt"
 
         var countItem = 0
         var text = context.assets.open(currenteFile).bufferedReader().use {
@@ -144,6 +143,10 @@ class GetAndStoreData(val context: Context) : AppCompatActivity() {
             if (element != "") {
                 i++
                 var list2 = element.split(GOD)
+                if (list2.size<2){
+                    Log.i("clima"," $element   withoutgod")
+                    return talkList1
+                }
                 var st1 = improveString(list2[0])
                 var st2 = improveString(list2[1])
                 if (st1.isNullOrEmpty() || st2.isNullOrEmpty()) {
@@ -156,7 +159,10 @@ class GetAndStoreData(val context: Context) : AppCompatActivity() {
                     taking = st1.trim()
                     numTalker = countItem
                     var arr = st1.split("\n")
-                    if (arr.size > 6) setToastMessage(st1)
+                    if (arr.size > 6){
+                      //  setToastMessage(st1)
+                        Log.i("clima","st1->$st1")
+                    }
                     for (item in arr) {
                         if (item != "") {
                             takingArray.add(item)
@@ -176,7 +182,10 @@ class GetAndStoreData(val context: Context) : AppCompatActivity() {
                     whoSpeake = "god"
                     talker.taking = st2.trim()
                     var arr = st2.split("\n")
-                    if (arr.size > 6) setToastMessage(st1)
+                    if (arr.size > 6){
+                      //  setToastMessage(st1)
+                        Log.i("clima","st1->$st1")
+                    }
                     for (item in arr) {
                         if (item != "") {
                             takingArray.add(item)
@@ -285,9 +294,9 @@ class GetAndStoreData(val context: Context) : AppCompatActivity() {
 
     private fun improveString(st: String) = st.substring(1, st.length - 1)
 
-    fun saveCurrentFile(index: Int) {
+    /*fun saveCurrentFile(index: Int) {
         myPref.edit().putInt(FILE_NUM, index).apply()
-    }
+    }*/
 
     private fun createTalkArray(jsonString: String?) {
         var talkList: ArrayList<Talker>
@@ -300,7 +309,7 @@ class GetAndStoreData(val context: Context) : AppCompatActivity() {
 
     fun createNewList(): ArrayList<Talker> {
         var talkList1 = ArrayList<Talker>()
-        val tagNum = getCurrentFile()
+      //  val tagNum = getCurrentFile()
 
         // var jsonS =  myPref.getString(TALKLIST+tagNum.toString(), null)
         var jsonS = myPref.getString(TALKLIST, null)

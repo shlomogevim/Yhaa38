@@ -46,8 +46,8 @@ class AnimationInAction(val context: Context) {
 
    // var listOfTextview = arrayListOf<TextView?>()
     var listOfTextview = arrayListOf(tv0, tv1, tv2, tv3, tv4, tv5)
-    var listOfTextviewMul = arrayListOf<TextView?>()
-    var listOfTextviewMul2 = arrayListOf<TextView?>()
+  /*  var listOfTextviewMul = arrayListOf<TextView?>()
+    var listOfTextviewMul2 = arrayListOf<TextView?>()*/
 
 
 
@@ -100,7 +100,7 @@ class AnimationInAction(val context: Context) {
             //  numTalker = index
         }
     }
-    fun executeTalker( ) {
+   /* fun executeTalker( ) {
         updateTitleTalkerSituation()
        val talker=pref.currentTalk()
         helper.activateHowSpeaking()
@@ -131,7 +131,7 @@ class AnimationInAction(val context: Context) {
 
         letsMove(talker, listOfTextview, listOfTextviewMul, listOfTextviewMul2)
 
-    }
+    }*/
 
      /*fun activateHowSpeaking(talker: Talker) {
         val anim = AnimatorInflater.loadAnimator(context, R.animator.alpha)

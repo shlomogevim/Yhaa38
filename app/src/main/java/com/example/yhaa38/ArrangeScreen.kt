@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.helper_view_layout.*
 class ArrangeScreen(val context: Context) {
 
     val activity = context as Activity
-    private val animationInAction = AnimationInAction(context)
+    private val animationInAction = AnimationInAction1(context)
     private val pref = GetAndStoreData(context)
 
     private var styleList = arrayListOf<String>()
