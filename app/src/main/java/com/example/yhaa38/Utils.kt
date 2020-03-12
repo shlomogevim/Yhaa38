@@ -13,7 +13,7 @@ data class Talker(
     var colorText: String = "#fdd835",
 
     var numTalker: Int = 0,
-    var animNum: Int = 20,
+    var animNum: Int = 120,
     var dur: Long = 3000,
     var textSize: Float = 20f,
 

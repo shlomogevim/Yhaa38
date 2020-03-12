@@ -88,11 +88,11 @@ class ArrangeScreen(val context: Context) {
             8 -> enterNewPage()
             9 -> pref.saveFonts(interval)
             10 -> talker = pref.getLastTalker().copy()
-            11 -> copySpecialTalker(1)
+           // 11 -> copySpecialTalker(1)
             15 -> talker.textSize = talker.textSize + intv
             16 -> talker.dur = talker.dur + intv
-            19 -> changeTextColor(talker)
-            20 -> changeBackColor(talker)
+           // 19 -> changeTextColor(talker)
+          //  20 -> changeBackColor(talker)
             21 -> changeBorderColor(talker)
             22 -> changeBorderWidth(talker, intv)
             23 -> talker.borderWidth = 0
@@ -415,7 +415,7 @@ class ArrangeScreen(val context: Context) {
             "Page",
             "Fonts",
             "Last Talker",
-            "CopyTalk1",
+            "-",
             "-",
             "-",
             "-",
@@ -428,7 +428,7 @@ class ArrangeScreen(val context: Context) {
             "Bord Color",
             "Bord Line",
             "No Bord",
-            "Swing Re.",
+            "Swing",
             "Radius",
             "Start"
         )
@@ -509,13 +509,13 @@ class ArrangeScreen(val context: Context) {
             actionList.add("-")
         }
         val list = arrayListOf(
-            "100",
-            "10", "11", "12", "13", "14", "15",
+            "110","111","120","121","130","131"
+            /*"10", "11", "12", "13", "14", "15",
             "20", "21", "22", "23", "24", "25",
             "30", "31", "32", "33", "34", "35",
             "40", "41", "42", "43", "44", "45", "46",
             "50", "51", "52", "53", "54", "55", "506",
-            "60", "61", "62", "63", "64", "65", "100"
+            "60", "61", "62", "63", "64", "65", "100"*/
         )
         actionList.addAll(list)
         for (i in 0..15) {
@@ -524,7 +524,7 @@ class ArrangeScreen(val context: Context) {
         val adapter1 =
             ArrayAdapter<String>(context, R.layout.mytext, actionList)
         activity.action_ListView.adapter = adapter1
-        activity.action_ListView.setSelection(15)
+        activity.action_ListView.setSelection(10)
     }
 
     private fun backGroundConfigaration() {

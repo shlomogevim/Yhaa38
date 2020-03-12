@@ -19,26 +19,27 @@ class MainActivity : AppCompatActivity() {
         animationInAction.executeTalker()
     }
 
-
     private fun enterData() {
-        var talkList = pref.getTalkingList(0) //***********
-       pref.saveCurrentPage(78)
+       // var talkList = pref.getTalkingList(0) //***********
+       pref.saveCurrentPage(63)
 
         pref.saveFonts(1)
        // pref.saveFonts(10)
-        var showPosition = true
-        pref.saveShowPosition(showPosition)
 
-        if (showPosition) {
+        val showPosition=pref.getShowPosition()
+        /*if (showPosition) {
             showPositionBtn.text = "toTest"
         } else {
             showPositionBtn.text = "toShow"
-        }
+        }*/
     }
 
     private fun initAll() {
         pref = GetAndStoreData(this)
             //var talkList = pref.getTalkingList(0) //***********
+
+        var showPosition = true
+        pref.saveShowPosition(showPosition)
 
         arrangeScreen = ArrangeScreen(this)
         buttonSpace = ButtonSpace(this)

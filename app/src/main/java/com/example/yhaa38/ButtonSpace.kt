@@ -1,6 +1,5 @@
 package com.example.yhaa38
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
@@ -48,7 +47,7 @@ class ButtonSpace(val context: Context) : View.OnClickListener {
             R.id.textRevBtn -> readAgainTextFile()
             R.id.newPageBtn -> enterNewPage()
             R.id.showPositionBtn -> changeShowPosition()
-            R.id.toShowModeBtn -> animationInAction.executeTalker()
+            R.id.reActivateAnimation -> animationInAction.executeTalker()
             R.id.plusAndMinusBtn -> changePlusMinusMode()
             R.id.saveButton -> saveIt()
             R.id.nextButton -> nextIt()
@@ -92,7 +91,10 @@ class ButtonSpace(val context: Context) : View.OnClickListener {
                 textRevBtn.visibility = VISIBLE
                 reSizeTextBtn.visibility = VISIBLE
                 newPageBtn.visibility = VISIBLE
-                toShowModeBtn.visibility = VISIBLE
+                reActivateAnimation.visibility = VISIBLE
+
+                showPositionBtn.visibility= VISIBLE
+                showPositionBtn.text = "toShow"
 
                 style_ListView.visibility = VISIBLE
                 para_ListView.visibility = VISIBLE
@@ -108,13 +110,13 @@ class ButtonSpace(val context: Context) : View.OnClickListener {
                 helper.activateHowSpeaking()
                 down_layout.visibility = INVISIBLE
                 upper_layout.visibility = VISIBLE
-
-                showPositionBtn.visibility = INVISIBLE
-
                 textRevBtn.visibility = INVISIBLE
                 reSizeTextBtn.visibility = INVISIBLE
                 newPageBtn.visibility = INVISIBLE
-                toShowModeBtn.visibility = INVISIBLE
+                reActivateAnimation.visibility = INVISIBLE
+
+                showPositionBtn.visibility= VISIBLE
+                showPositionBtn.text = "toTest"
 
                 style_ListView.visibility = INVISIBLE
                 para_ListView.visibility = INVISIBLE
@@ -177,7 +179,6 @@ class ButtonSpace(val context: Context) : View.OnClickListener {
         return talkList
     }
 
-
     private fun minTextSize() {
         updateLastTalker(0)
         val list = pref.getTalkingList(1)
@@ -188,9 +189,7 @@ class ButtonSpace(val context: Context) : View.OnClickListener {
     }
 
     private fun enterNewPage() {
-
         var myDialog = AlertDialog.Builder(context)
-
         val input = EditText(context)
         myDialog.setView(input)
         myDialog.setTitle("Enter new page")
@@ -246,35 +245,73 @@ class ButtonSpace(val context: Context) : View.OnClickListener {
         var cu = getCurrentPage()
         cu--
         pref.saveCurrentPage(cu)
-        nextAndPriviousAction()
-        /*drawAnim()
-        CoroutineScope(Main).launch {
-            waitTillAnimationEnd()
-
-        }*/
+        redGreenTvPage()
+        animationInAction.executeTalker()
     }
 
     private fun startPage() {
         pref.saveLastTalker(pref.currentTalk())
         pref.saveCurrentPage(1)
-        nextAndPriviousAction()
+        redGreenTvPage()
+        animationInAction.executeTalker()
     }
+
     fun nextIt() {
         pref.saveLastTalker(pref.currentTalk())
         var cu = getCurrentPage()
         cu++
         pref.saveCurrentPage(cu)
-        nextAndPriviousAction()
+        redGreenTvPage()
+        animationInAction.executeTalker()
+    }
+
+    private fun changePlusMinusMode() {
+        with(activity.plusAndMinusBtn) {
+            if (text == "+") {
+                text = "-"
+            } else {
+                text = "+"
+            }
+        }
+    }
+
+    override fun onClick(view: View) {
+        letsPlay(view)
+    }
+
+    private fun time(st: String) {
+        endTime = System.nanoTime()
+        val interval = TimeUnit.MILLISECONDS.convert(endTime - statrTime, TimeUnit.NANOSECONDS)
+        Log.d("clima", st + " --> $interval ms")
 
     }
 
-    private fun nextAndPriviousAction(){
+      private fun redGreenTvPage() {
+       val talker = pref.currentTalk()
+       animationInActionSign(1, 500)
+       activity.fab.isClickable = false
+       activity.fab1.isClickable = false
+       drawAnim()
+       CoroutineScope(Main).launch {
+           //delay(talker.dur + 200)
+           var dela=talker.dur
+           if (talker.animNum==111){
+               dela=dela*talker.textSize.toLong()
+           }
+           delay(dela)
+           activity.fab.isClickable = true
+           activity.fab1.isClickable = true
+           animationInActionSign(0, 500)
+       }
+   }
 
-            animationInActionSign(1, 500)
-            activity.fab.isClickable = false
-            activity.fab1.isClickable = false
-            drawAnim()
-            val talker = pref.currentTalk()
+    private fun nextAndPriviousAction() {
+
+        animationInActionSign(1, 500)
+        activity.fab.isClickable = false
+        activity.fab1.isClickable = false
+        drawAnim()
+        val talker = pref.currentTalk()
         CoroutineScope(Main).launch {
             //delay(talker.dur + 200)
             delay(talker.dur)
@@ -285,16 +322,6 @@ class ButtonSpace(val context: Context) : View.OnClickListener {
 
     }
 
-   /* private suspend fun waitTillAnimationEnd() {
-        val talker = pref.currentTalk()
-        delay(talker.dur + 200)
-        activity.fab.isClickable = true
-        activity.fab1.isClickable = true
-        animationInActionSign(0, 500)
-         withContext(Main) {
-             animationInActionSign(0, 600)
-         }
-    }*/
 
     fun animationInActionSign(ind: Int, dur: Long) {
         if (ind == 0) {
@@ -311,31 +338,6 @@ class ButtonSpace(val context: Context) : View.OnClickListener {
                 .duration(dur)
                 .start()
         }
-    }
-
-    private fun changePlusMinusMode() {
-        with(activity.plusAndMinusBtn) {
-            if (text == "+") {
-                text = "-"
-            } else {
-                text = "+"
-            }
-        }
-    }
-
-
-    private fun time(st: String) {
-        endTime = System.nanoTime()
-        val interval = TimeUnit.MILLISECONDS.convert(endTime - statrTime, TimeUnit.NANOSECONDS)
-        Log.d("clima", st + " --> $interval ms")
-
-    }
-
-    override fun onClick(view: View) {
-
-        letsPlay(view)
-
-
     }
 
 /* private fun onClickOther(view: View) {
@@ -425,52 +427,6 @@ class ButtonSpace(val context: Context) : View.OnClickListener {
     }
 
 
-    fun buttonActivation(ind: Int) {
-        time("buttonActivation 1 ind=$ind")
-        var showPosition = pref.getShowPosition()
-
-
-        with(activity) {
-            if (ind == 0) {
-                if (showPosition) {
-                    fab.isClickable = false
-                    fab1.isClickable = false
-                    fabAnimation(0)
-                } else {
-                    textRevBtn.visibility = INVISIBLE
-                    newPageBtn.visibility = INVISIBLE
-                    toShowModeBtn.visibility = INVISIBLE
-                    plusAndMinusBtn.visibility = INVISIBLE
-                    showPositionBtn.visibility = INVISIBLE
-                    saveButton.visibility = INVISIBLE
-                    nextButton.visibility = INVISIBLE
-                    previousButton.visibility = INVISIBLE
-                    lastTalker_button.visibility = INVISIBLE
-                    reSizeTextBtn.visibility = INVISIBLE
-                }
-            }
-            if (ind == 1) {
-                if (showPosition) {
-                    fab.isClickable = true
-                    fab1.isClickable = true
-                    fabAnimation(1)
-                } else {
-                    textRevBtn.visibility = VISIBLE
-                    newPageBtn.visibility = VISIBLE
-                    toShowModeBtn.visibility = VISIBLE
-                    plusAndMinusBtn.visibility = VISIBLE
-                    showPositionBtn.visibility = VISIBLE
-                    saveButton.visibility = VISIBLE
-                    nextButton.visibility = VISIBLE
-                    previousButton.visibility = VISIBLE
-                    lastTalker_button.visibility = VISIBLE
-                    reSizeTextBtn.visibility = VISIBLE
-                }
-            }
-        }
-        time("buttonActivation 2 ind=$ind")
-    }
-
     fun initButton() {
         with(activity) {
             showPositionBtn.setOnClickListener { onClick(showPositionBtn) }
@@ -482,7 +438,7 @@ class ButtonSpace(val context: Context) : View.OnClickListener {
             previousButton.setOnClickListener { onClick(previousButton) }
             lastTalker_button.setOnClickListener { onClick(lastTalker_button) }
             reSizeTextBtn.setOnClickListener { onClick(reSizeTextBtn) }
-            toShowModeBtn.setOnClickListener { onClick(toShowModeBtn) }
+            reActivateAnimation.setOnClickListener { onClick(reActivateAnimation) }
             fab.setOnClickListener { onClick(fab) }
             fab1.setOnClickListener { onClick(fab1) }
             tvPage.setOnClickListener { onClick(tvPage) }
@@ -490,3 +446,49 @@ class ButtonSpace(val context: Context) : View.OnClickListener {
         setShowPositionMode()
     }
 }
+
+/*fun buttonActivation(ind: Int) {
+    time("buttonActivation 1 ind=$ind")
+    var showPosition = pref.getShowPosition()
+
+
+    with(activity) {
+        if (ind == 0) {
+            if (showPosition) {
+                fab.isClickable = false
+                fab1.isClickable = false
+                fabAnimation(0)
+            } else {
+                textRevBtn.visibility = INVISIBLE
+                newPageBtn.visibility = INVISIBLE
+                toShowModeBtn.visibility = INVISIBLE
+                plusAndMinusBtn.visibility = INVISIBLE
+                showPositionBtn.visibility = INVISIBLE
+                saveButton.visibility = INVISIBLE
+                nextButton.visibility = INVISIBLE
+                previousButton.visibility = INVISIBLE
+                lastTalker_button.visibility = INVISIBLE
+                reSizeTextBtn.visibility = INVISIBLE
+            }
+        }
+        if (ind == 1) {
+            if (showPosition) {
+                fab.isClickable = true
+                fab1.isClickable = true
+                fabAnimation(1)
+            } else {
+                textRevBtn.visibility = VISIBLE
+                newPageBtn.visibility = VISIBLE
+                toShowModeBtn.visibility = INVISIBLE
+                plusAndMinusBtn.visibility = VISIBLE
+                showPositionBtn.visibility = VISIBLE
+                saveButton.visibility = VISIBLE
+                nextButton.visibility = VISIBLE
+                previousButton.visibility = VISIBLE
+                lastTalker_button.visibility = VISIBLE
+                reSizeTextBtn.visibility = VISIBLE
+            }
+        }
+    }
+    time("buttonActivation 2 ind=$ind")
+}*/

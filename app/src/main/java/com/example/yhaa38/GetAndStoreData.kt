@@ -124,7 +124,9 @@ class GetAndStoreData(val context: Context) : AppCompatActivity() {
         val ADAM = "-אדם-"
         val GOD = "-אלוהים-"
         //val currenteFile = "text/text" + ASSEETS_FILE + ".txt"
-        val currenteFile = "pretext/" + ASSEETS_FILE + ".txt"
+       // val currenteFile = "pretext/" + ASSEETS_FILE + ".txt"
+        val currenteFile = "text1/" + ASSEETS_FILE + ".txt"
+
 
         var countItem = 0
         var text = context.assets.open(currenteFile).bufferedReader().use {

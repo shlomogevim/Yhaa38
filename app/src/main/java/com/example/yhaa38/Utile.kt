@@ -5,76 +5,218 @@ import android.graphics.Color
 import android.graphics.Point
 import android.view.View
 import android.view.animation.AccelerateInterpolator
-import android.view.animation.BounceInterpolator
 import android.widget.TextView
 import com.github.florent37.viewanimator.ViewAnimator
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 object Utile {
     var wi: Float = Resources.getSystem().displayMetrics.widthPixels.toFloat()
     var hi: Float = Resources.getSystem().displayMetrics.heightPixels.toFloat()
     var start = 0L
     var end = 0L
-    var pointLeftDown=Point((-wi / 2).toInt(), hi.toInt())
-    var pointRightDown=Point((wi / 2).toInt(), hi.toInt())
-    var pointLeftUp=Point((-wi / 2).toInt(), -hi.toInt())
-    var pointRightUp=Point((wi / 2).toInt(), -hi.toInt())
+    var pointLeftDown = Point((-wi / 2).toInt(), hi.toInt())
+    var pointRightDown = Point((wi / 2).toInt(), hi.toInt())
+    var pointLeftUp = Point((-wi / 2).toInt(), -hi.toInt())
+    var pointRightUp = Point((wi / 2).toInt(), -hi.toInt())
     var listener1: ((item: Int, myTime: Long) -> Unit)? = null
 
-    fun moveScale100( talker: Talker, arr: ArrayList<TextView?>) {
-        if (talker.whoSpeake=="man") {
-            val linesNum = talker.takingArray.size
+
+    fun scaleOnly120(talker: Talker, arr: ArrayList<TextView?>) {
+        val linesNum = talker.takingArray.size
+        for (index in 1..linesNum) {
+            itemScale(talker, arr[index - 1]!!, index)
+        }
+    }
+
+    fun scaleOnly121(talker: Talker, arr: ArrayList<TextView?>) {
+        val linesNum = talker.takingArray.size
+        CoroutineScope(Main).launch {
             for (index in 1..linesNum) {
-                itemMoveScaleMan(talker, index, arr[index - 1]!!)
+                if (index > 1) delay(talker.dur)
+                // itemScale1(talker, arr[index - 1]!!)
+                itemScale(talker, arr[index - 1]!!, index)
             }
-        }else{
-            moveScale2000(talker,arr)
+        }
+    }
+
+    fun itemScale(talker: Talker, textView: TextView, index: Int) {
+        val swing = talker.swingRepeat
+        val linesNum = talker.takingArray.size
+        if (swing > 0 && index == linesNum) {
+            ViewAnimator
+                .animate(textView)
+                .scale(0f, 1f)
+                .duration(talker.dur)
+                .thenAnimate(textView)
+                .swing()
+                .start()
+        } else {
+            ViewAnimator
+                .animate(textView)
+                .scale(0f, 1f)
+                .duration(talker.dur)
+                .start()
+        }
+    }
+
+
+    fun moveScale110(talker: Talker, arr: ArrayList<TextView?>) {
+        val linesNum = talker.takingArray.size
+        for (index in 1..linesNum) {
+            if (talker.whoSpeake == "man") {
+                itemMoveScaleMan(talker, index, arr[index - 1]!!)
+            } else {
+                itemMoveScaleGod(talker, index, arr[index - 1]!!)
+            }
+        }
+    }
+
+    fun moveScaleWithDelay111(talker: Talker, arr: ArrayList<TextView?>) {
+        val linesNum = talker.takingArray.size
+        CoroutineScope(Main).launch {
+            for (index in 1..linesNum) {
+                if (index > 1) delay(talker.dur)
+                if (talker.whoSpeake == "man") {
+                    itemMoveScaleMan(talker, index, arr[index - 1]!!)
+                } else {
+                    itemMoveScaleGod(talker, index, arr[index - 1]!!)
+                }
+            }
         }
     }
 
     private fun itemMoveScaleMan(talker: Talker, ind: Int, textView: TextView) {
-        val tv=initTextView(textView)
-        when (ind){
-            1-> basicMoveAndScale(tv, pointLeftUp, talker.dur, ind)
-            2-> basicMoveAndScale(tv, pointRightUp, talker.dur, ind)
-            3-> basicMoveAndScale(tv, pointLeftUp, talker.dur, ind)
-            4-> basicMoveAndScale(tv, pointRightUp, talker.dur, ind)
-            5-> basicMoveAndScale(tv, pointLeftUp, talker.dur, ind)
-            6-> basicMoveAndScale(tv, pointRightUp, talker.dur, ind)
+        val tv = initTextView(textView)
+        val side = ind % 2
+        if (side == 0) {
+            basicMoveAndScale(tv, pointLeftUp, talker, ind)
+        } else {
+            basicMoveAndScale(tv, pointRightUp, talker, ind)
         }
     }
 
+    private fun itemMoveScaleGod(talker: Talker, ind: Int, textView: TextView) {
+        val tv = initTextView(textView)
+        val side = ind % 2
+        if (side == 0) {
+            basicMoveAndScale(tv, pointLeftDown, talker, ind)
+        } else {
+            basicMoveAndScale(tv, pointRightDown, talker, ind)
+        }
+    }
 
-    fun moveScale2000( talker: Talker, arr: ArrayList<TextView?>) {
+    private fun basicMoveAndScale(textView: TextView, point: Point, talker: Talker, index: Int) {
+        val swing = talker.swingRepeat
+        val linesNum = talker.takingArray.size
+        if (swing > 0 && index == linesNum) {
+            ViewAnimator
+                .animate(textView).scale(0f, 1f).translationX(point.x.toFloat(), 0f)
+                .translationY(point.y.toFloat(), 0f)
+                .duration(talker.dur)
+                .thenAnimate(textView)
+                .swing()
+                .start()
+        } else {
+            ViewAnimator
+                .animate(textView).scale(0f, 1f).translationX(point.x.toFloat(), 0f)
+                .translationY(point.y.toFloat(), 0f)
+                .duration(talker.dur)
+                .start()
+        }
+    }
+
+    fun moveScaleRotateAll130(talker: Talker, arr: ArrayList<TextView?>) {
         val linesNum = talker.takingArray.size
         for (index in 1..linesNum) {
-            itemMoveScale(talker, index, arr[index - 1]!!)
-        }
-    }
-
-
-    private fun itemMoveScale(talker: Talker, ind: Int, textView: TextView) {
-        val tv=initTextView(textView)
-        when (ind){
-            1-> basicMoveAndScale(tv, pointLeftDown, talker.dur, ind)
-            2-> basicMoveAndScale(tv, pointRightDown, talker.dur, ind)
-            3-> basicMoveAndScale(tv, pointLeftDown, talker.dur, ind)
-            4-> basicMoveAndScale(tv, pointRightDown, talker.dur, ind)
-            5-> basicMoveAndScale(tv, pointLeftDown, talker.dur, ind)
-            6-> basicMoveAndScale(tv, pointRightDown, talker.dur, ind)
-        }
-    }
-
-    private fun basicMoveAndScale(textView:TextView,point:Point,dur:Long,ind:Int){
-        ViewAnimator
-            .animate(textView).scale(0f, 1f).translationX(point.x.toFloat(), 0f).translationY(point.y.toFloat(), 0f)
-            .duration(dur)
-            .start().onStop {
-                end = System.currentTimeMillis() - start
-                listener1?.invoke(ind, end)
+            if (talker.whoSpeake == "man") {
+                itemMoveScaleManRotate(talker, index, arr[index - 1]!!)
+            } else {
+                itemMoveScaleGodRotate(talker, index, arr[index - 1]!!)
             }
-
+        }
     }
-    private fun basicMoveAndScale1(textView:TextView,point:Point,dur:Long,ind:Int){
+
+    fun moveScaleRotate131(talker: Talker, arr: ArrayList<TextView?>) {
+        val linesNum = talker.takingArray.size
+        CoroutineScope(Main).launch {
+            for (index in 1..linesNum) {
+                if (index > 1) delay(talker.dur)
+                if (talker.whoSpeake == "man") {
+                    itemMoveScaleManRotate(talker, index, arr[index - 1]!!)
+                } else {
+                    itemMoveScaleGodRotate(talker, index, arr[index - 1]!!)
+                }
+            }
+        }
+    }
+
+    private fun itemMoveScaleManRotate(talker: Talker, index: Int, textView: TextView) {
+        val tv = initTextView(textView)
+        val side = index % 2
+        if (side == 0) {
+            basicMoveAndScaleAndRotate(tv, pointLeftUp, talker, index)
+        } else {
+            basicMoveAndScaleAndRotate(tv, pointRightUp, talker, index)
+        }
+    }
+
+    private fun itemMoveScaleGodRotate(talker: Talker, index: Int, textView: TextView) {
+        val tv = initTextView(textView)
+        val side = index % 2
+        if (side == 0) {
+            basicMoveAndScaleAndRotate(tv, pointLeftDown, talker, index)
+        } else {
+            basicMoveAndScaleAndRotate(tv, pointRightDown, talker, index)
+        }
+    }
+
+    private fun basicMoveAndScaleAndRotate(
+        textView: TextView,
+        point: Point,
+        talker: Talker,
+        index: Int
+    ) {
+        val side = index % 2
+        if (side == 0) {
+            ViewAnimator
+                .animate(textView).scale(0f, 1f).translationX(point.x.toFloat(), 0f)
+                .translationY(point.y.toFloat(), 0f)
+                .rotation(360f)
+                .duration(talker.dur)
+                .thenAnimate(textView)
+                .rotation(-360f)
+                .duration(1)
+                .start()
+        } else {
+            ViewAnimator
+                .animate(textView).scale(0f, 1f).translationX(point.x.toFloat(), 0f)
+                .translationY(point.y.toFloat(), 0f)
+                .rotation(-360f)
+                .duration(talker.dur)
+                .thenAnimate(textView)
+                .rotation(360f)
+                .duration(1)
+                .start()
+        }
+    }
+
+/*
+* .animate(textView)
+                .scale(0f, 1f)
+                .translationX(arr[0], 0f)
+                .translationY(arr[1], 0f)
+                .rotation(arr[4])
+                .duration(talker.dur)
+                .thenAnimate(textView)
+                .rotation(-arr[4])
+                .duration(1)
+                .start()*/
+
+
+    private fun basicMoveAndScale1(textView: TextView, point: Point, dur: Long, ind: Int) {
         ViewAnimator
             .animate(textView)
             .scale(0f, 1f)
@@ -89,13 +231,13 @@ object Utile {
             }
 
     }
-    private fun initTextView(textView:TextView):TextView{
+
+    private fun initTextView(textView: TextView): TextView {
         textView.visibility = View.VISIBLE
         textView.scaleX = 1f
         textView.scaleY = 1f
         return textView
     }
-
 
 
     fun getCordinateAndSpineNew(ind: Int): Array<Float> {

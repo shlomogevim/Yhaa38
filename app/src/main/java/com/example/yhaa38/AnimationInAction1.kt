@@ -1,18 +1,18 @@
 package com.example.yhaa38
 
-import android.animation.AnimatorInflater
 import android.app.Activity
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
-import android.view.View
 import android.widget.TextView
-import android.widget.Toast
 import com.github.florent37.viewanimator.ViewAnimator
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.god_layout.*
 import kotlinx.android.synthetic.main.helper_view_layout.*
 import kotlinx.android.synthetic.main.man_layout.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.*
 
 class AnimationInAction1(val context: Context) {
@@ -74,6 +74,8 @@ class AnimationInAction1(val context: Context) {
                 "l=${takingArray.size}*sty=$styleNum*anim=$animNum*size=${textSize.toInt()}" +
                         "*bord=$borderWidth*dur=$dur sw=$swingRepeat"
             activity.tvAnimatinKind.text = newTalkerDetails
+            activity.tvAnimatinKind.textSize = 11f
+
             activity.tvPage.text = index.toString()
             //  numTalker = index
         }
@@ -81,6 +83,7 @@ class AnimationInAction1(val context: Context) {
 
     fun executeTalker() {
         updateTitleTalkerSituation()
+      //  redGreenTvPage()
         val talker = pref.currentTalk()
         helper.activateHowSpeaking()
 
@@ -95,12 +98,48 @@ class AnimationInAction1(val context: Context) {
 
     }
 
+    private fun redGreenTvPage() {
+        val talker = pref.currentTalk()
+        animationInActionSign(1, 500)
+        activity.fab.isClickable = false
+        activity.fab1.isClickable = false
+        CoroutineScope(Dispatchers.Main).launch {
+            var dela=talker.dur
+            if (talker.animNum==111 || talker.animNum==121 || talker.animNum==131){
+                dela=dela*talker.takingArray.size.toLong()
+            }
+            delay(dela)
+            activity.fab.isClickable = true
+            activity.fab1.isClickable = true
+            animationInActionSign(0, 500)
+        }
+    }
+    fun animationInActionSign(ind: Int, dur: Long) {
+        if (ind == 0) {
+            ViewAnimator
+                .animate(activity.tvPage)
+                .backgroundColor(Color.RED, Color.GREEN)
+                .duration(dur)
+                .start()
 
+        } else {
+            ViewAnimator
+                .animate(activity.tvPage)
+                .backgroundColor(Color.GREEN, Color.RED)
+                .duration(dur)
+                .start()
+        }
+    }
     private fun letsMove(talker: Talker, listOfTextview: ArrayList<TextView?>) {
 
         when (talker.animNum) {
 
-            100, 1000 -> Utile.moveScale100(talker, listOfTextview)
+            110 -> Utile.moveScale110(talker, listOfTextview)  //all together from the oposite corner
+            111 -> Utile.moveScaleWithDelay111(talker, listOfTextview)  //with delay
+            120 -> Utile.scaleOnly120(talker, listOfTextview)  //all together
+            121 -> Utile.scaleOnly121(talker, listOfTextview)  //with delay
+            130 -> Utile.moveScaleRotateAll130(talker, listOfTextview)//all together
+            131 -> Utile.moveScaleRotate131(talker, listOfTextview)  //with delay
 
             10 -> Utile.move_swing(10, talker, listOfTextview)
             11 -> Utile.move_swing(11, talker, listOfTextview)

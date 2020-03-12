@@ -1,15 +1,12 @@
 package com.example.yhaa38
 
-import android.animation.AnimatorInflater
 import android.app.Activity
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
-import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import com.github.florent37.viewanimator.ViewAnimator
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.god_layout.*
 import kotlinx.android.synthetic.main.helper_view_layout.*
 import kotlinx.android.synthetic.main.man_layout.*
@@ -173,7 +170,7 @@ class AnimationInAction(val context: Context) {
 
         when (talker.animNum) {
 
-            100,1000 -> Utile.moveScale100(talker, listOfTextview)
+            100,1000 -> Utile.moveScale110(talker, listOfTextview)
 
             10 -> Utile.move_swing(10, talker, listOfTextview)
             11 -> Utile.move_swing(11, talker, listOfTextview)
