@@ -20,26 +20,23 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun enterData() {
-       // var talkList = pref.getTalkingList(0) //***********
-       pref.saveCurrentPage(63)
+        var talkList = pref.getTalkingList(0) //***********
+
+        pref.saveCurrentPage(42)
 
         pref.saveFonts(1)
-       // pref.saveFonts(10)
-
-        val showPosition=pref.getShowPosition()
-        /*if (showPosition) {
-            showPositionBtn.text = "toTest"
-        } else {
-            showPositionBtn.text = "toShow"
-        }*/
     }
 
     private fun initAll() {
         pref = GetAndStoreData(this)
-            //var talkList = pref.getTalkingList(0) //***********
+
+        // var talkList = pref.getTalkingList(0) //***********
 
         var showPosition = true
         pref.saveShowPosition(showPosition)
+        var testMode = false
+        pref.saveTestMode(testMode)
+
 
         arrangeScreen = ArrangeScreen(this)
         buttonSpace = ButtonSpace(this)

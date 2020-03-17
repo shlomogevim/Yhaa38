@@ -7,7 +7,6 @@ import android.util.Base64
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.yhaa38.Const.Companion.ASSEETS_FILE
 import com.example.yhaa38.Const.Companion.CURRENT_PAGE
 import com.example.yhaa38.Const.Companion.FONTS
 import com.example.yhaa38.Const.Companion.INTERVAL
@@ -16,10 +15,11 @@ import com.example.yhaa38.Const.Companion.LAST_PAGE
 import com.example.yhaa38.Const.Companion.PREFS_NAME
 import com.example.yhaa38.Const.Companion.SHOWPOSITION
 import com.example.yhaa38.Const.Companion.TALKLIST
+import com.example.yhaa38.Const.Companion.TESTMODE
+import com.example.yhaa38.Const.Companion.TEXT_FILE
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.io.ByteArrayOutputStream
-import java.util.logging.Handler
 
 class GetAndStoreData(val context: Context) : AppCompatActivity() {
 
@@ -42,6 +42,9 @@ class GetAndStoreData(val context: Context) : AppCompatActivity() {
     fun saveShowPosition(bo: Boolean) {
         myPref.edit().putBoolean(SHOWPOSITION, bo).apply()
     }
+    fun saveTestMode(bo: Boolean) {
+        myPref.edit().putBoolean(TESTMODE, bo).apply()
+    }
 
     fun saveFonts(index: Int) {
         myPref.edit().putInt(FONTS, index).apply()
@@ -52,6 +55,7 @@ class GetAndStoreData(val context: Context) : AppCompatActivity() {
     fun getInterval(): Int = myPref.getInt(INTERVAL, 0)
    // fun getCurrentFile(): Int = myPref.getInt(FILE_NUM, 1)
     fun getShowPosition(): Boolean = myPref.getBoolean(SHOWPOSITION, true)
+    fun getTestMode(): Boolean = myPref.getBoolean(TESTMODE, false)
     fun getFonts(): Int = myPref.getInt(FONTS, 1)
 
     fun currentTalk(): Talker {
@@ -123,9 +127,14 @@ class GetAndStoreData(val context: Context) : AppCompatActivity() {
         var talkList1 = arrayListOf<Talker>()
         val ADAM = "-אדם-"
         val GOD = "-אלוהים-"
+
         //val currenteFile = "text/text" + ASSEETS_FILE + ".txt"
-       // val currenteFile = "pretext/" + ASSEETS_FILE + ".txt"
-        val currenteFile = "text1/" + ASSEETS_FILE + ".txt"
+
+      //  val currenteFile = "pretext/" + ASSEETS_FILE + ".txt"
+
+            //  val currenteFile = "text1/" + ASSEETS_FILE + ".txt"
+        val currenteFile = TEXT_FILE
+
 
 
         var countItem = 0
@@ -161,12 +170,15 @@ class GetAndStoreData(val context: Context) : AppCompatActivity() {
                     taking = st1.trim()
                     numTalker = countItem
                     var arr = st1.split("\n")
+                    var ar=arr.toList()
+                    arr=improveAr(ar)
+
                     if (arr.size > 6){
                       //  setToastMessage(st1)
                         Log.i("clima","st1->$st1")
                     }
                     for (item in arr) {
-                        if (item != "") {
+                        if (item.isNotBlank()) {
                             takingArray.add(item)
                         }
                     }
@@ -184,12 +196,13 @@ class GetAndStoreData(val context: Context) : AppCompatActivity() {
                     whoSpeake = "god"
                     talker.taking = st2.trim()
                     var arr = st2.split("\n")
+                    arr=improveAr(arr)
                     if (arr.size > 6){
                       //  setToastMessage(st1)
                         Log.i("clima","st1->$st1")
                     }
                     for (item in arr) {
-                        if (item != "") {
+                        if (item.isNotBlank()) {
                             takingArray.add(item)
                         }
                     }
@@ -205,6 +218,19 @@ class GetAndStoreData(val context: Context) : AppCompatActivity() {
             }
         }
         return talkList1
+    }
+
+    private fun improveAr(ar: List<String>): List<String> {
+        var arr= ArrayList<String>()
+        for (item in ar){
+            if (item.length>1){
+                arr.add(item)
+            }
+        }
+
+
+
+      return arr
     }
 
     /*  fun getTalkingList(ind: Int): ArrayList<Talker> {

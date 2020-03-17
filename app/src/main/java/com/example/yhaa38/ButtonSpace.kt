@@ -75,6 +75,7 @@ class ButtonSpace(val context: Context) : View.OnClickListener {
 
     fun setShowPositionMode() {
         var showPosition = pref.getShowPosition()
+        var testMode=pref.getTestMode()
 
         with(activity) {
             if (!showPosition) {
@@ -93,8 +94,13 @@ class ButtonSpace(val context: Context) : View.OnClickListener {
                 newPageBtn.visibility = VISIBLE
                 reActivateAnimation.visibility = VISIBLE
 
-                showPositionBtn.visibility= VISIBLE
-                showPositionBtn.text = "toShow"
+                if (testMode) {
+                    showPositionBtn.visibility = VISIBLE
+                    showPositionBtn.text = "toShow"
+                }else{
+                    showPositionBtn.visibility = INVISIBLE
+
+                }
 
                 style_ListView.visibility = VISIBLE
                 para_ListView.visibility = VISIBLE
@@ -114,10 +120,13 @@ class ButtonSpace(val context: Context) : View.OnClickListener {
                 reSizeTextBtn.visibility = INVISIBLE
                 newPageBtn.visibility = INVISIBLE
                 reActivateAnimation.visibility = INVISIBLE
+                if (testMode) {
+                    showPositionBtn.visibility = VISIBLE
+                    showPositionBtn.text = "toTest"
+                }else{
+                    showPositionBtn.visibility = INVISIBLE
 
-                showPositionBtn.visibility= VISIBLE
-                showPositionBtn.text = "toTest"
-
+                }
                 style_ListView.visibility = INVISIBLE
                 para_ListView.visibility = INVISIBLE
                 ttPara_listView.visibility = INVISIBLE
